@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Convidados - Chá da Marjorie</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chá da Marjorie</h1>
+            <p class="subtitle">Lista de Convidados</p>
+        </header>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="totalGuests">0</div>
+                <div class="stat-label">Total</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="confirmedGuests">0</div>
+                <div class="stat-label">Confirmados</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="pendingGuests">0</div>
+                <div class="stat-label">Pendentes</div>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="searchInput" placeholder="Buscar convidado...">
+        </div>
+        
+        <div class="section-title">
+            <span>ADULTOS</span>
+            <span id="adultCount">53</span>
+        </div>
+        <ul class="guest-list" id="adultList"></ul>
+        
+        <div class="section-title">
+            <span>CRIANÇAS</span>
+            <span id="childrenCount">8</span>
+        </div>
+        <ul class="guest-list" id="childrenList"></ul>
+        
+        <div class="actions">
+            <button id="selectAll">Marcar Todos</button>
+            <button id="clearAll">Desmarcar Todos</button>
+            <button id="exportBtn">Exportar Lista</button>
+        </div>
+        
+        <div class="summary">
+            <p>Total de convidados: <span id="totalCount">61</span> | Confirmados: <span id="confirmedCount">0</span></p>
+        </div>
+        
+        <div class="sync-notice">
+            As alterações são salvas automaticamente no seu navegador
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
