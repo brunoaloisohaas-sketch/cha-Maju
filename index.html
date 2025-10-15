@@ -4,7 +4,212 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Convidados - Chá da Marjorie</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #ff6b8b 0%, #ff9a9e 100%);
+            color: white;
+            padding: 25px 20px;
+            text-align: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background-color: #f1f3f5;
+            padding: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #343a40;
+        }
+        
+        .stat-label {
+            font-size: 0.8rem;
+            color: #6c757d;
+        }
+        
+        .section-title {
+            background-color: #ffd6de;
+            padding: 12px 20px;
+            font-weight: 600;
+            color: #343a40;
+            border-bottom: 1px solid #ffb3c1;
+            display: flex;
+            justify-content: space-between;
+        }
+        
+        .guest-list {
+            padding: 0;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        
+        .guest-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #f1f3f5;
+            transition: background-color 0.2s;
+        }
+        
+        .guest-item:hover {
+            background-color: #f8f9fa;
+        }
+        
+        .guest-checkbox {
+            margin-right: 15px;
+            transform: scale(1.2);
+            accent-color: #ff6b8b;
+        }
+        
+        .guest-name {
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+        
+        .guest-status {
+            font-size: 0.8rem;
+            padding: 4px 8px;
+            border-radius: 12px;
+            background-color: #e9ecef;
+            color: #6c757d;
+        }
+        
+        .guest-status.confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        
+        .search-container {
+            padding: 15px 20px;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        #searchInput {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .actions {
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            background-color: #f8f9fa;
+            gap: 10px;
+        }
+        
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            flex: 1;
+        }
+        
+        #selectAll {
+            background-color: #ff6b8b;
+            color: white;
+        }
+        
+        #selectAll:hover {
+            background-color: #ff4d6d;
+        }
+        
+        #clearAll {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        #clearAll:hover {
+            background-color: #5a6268;
+        }
+        
+        #exportBtn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        #exportBtn:hover {
+            background-color: #218838;
+        }
+        
+        .summary {
+            padding: 15px 20px;
+            text-align: center;
+            background-color: #f1f3f5;
+            color: #343a40;
+            font-size: 0.9rem;
+        }
+        
+        .sync-notice {
+            background-color: #fff3cd;
+            color: #856404;
+            padding: 10px 15px;
+            text-align: center;
+            font-size: 0.9rem;
+            border-top: 1px solid #ffeaa7;
+        }
+        
+        @media (max-width: 600px) {
+            .stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -15,7 +220,7 @@
         
         <div class="stats">
             <div class="stat-item">
-                <div class="stat-number" id="totalGuests">0</div>
+                <div class="stat-number" id="totalGuests">61</div>
                 <div class="stat-label">Total</div>
             </div>
             <div class="stat-item">
@@ -23,7 +228,7 @@
                 <div class="stat-label">Confirmados</div>
             </div>
             <div class="stat-item">
-                <div class="stat-number" id="pendingGuests">0</div>
+                <div class="stat-number" id="pendingGuests">61</div>
                 <div class="stat-label">Pendentes</div>
             </div>
         </div>
@@ -59,6 +264,245 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+        // Dados dos convidados - versão simplificada
+        const guests = {
+            adults: [
+                "Marli ANY", "Júlio ANY", "Michele ANY", "Jadeilson ANY", "Ryan ANY", 
+                "Sofia ANY", "Alison Patrick", "Gilmar ANY", "Mari ANY", "Leonardo ANY", 
+                "Vó Antônia ANY", "Amilton ANY", "Patrícia ANY", "Suelen ANY", "Anderson ANY", 
+                "Olalia ANY", "Sérgio ANY", "Lila ANY", "Armindo ANY", "Ângela BRUNO", 
+                "Adelar BRUNO", "Leonora BRUNO", "Biscoito BRUNO", "Marco BRUNO", "Mateus BRUNO", 
+                "Ana BRUNO", "Leonardo", "Heloisa", "Jardel", "Laiza", 
+                "Gabriel", "Vitória", "Alison", "Carol", "Emerson", 
+                "Gessica", "Ana Carolina", "Junior", "Rarissa", "Lavinia", 
+                "Vodka", "André juliano", "Ale", "Rosi", "Fernando thome", 
+                "Edson", "Suelen shopping", "Marido Suelen shopping", "Mãe Suelen", "Pai Suelen", 
+                "Fernanda irmã Suellen", "Marido Fernanda", "Renata"
+            ],
+            children: [
+                "Sofia", "Luís Miguel", "Maria Antônia", "Ana", "Arthur", 
+                "Camilly", "Emily", "Henrique"
+            ]
+        };
+
+        // Função para carregar a lista de convidados
+        function loadGuestLists() {
+            console.log("Carregando lista de convidados...");
+            
+            const adultList = document.getElementById('adultList');
+            const childrenList = document.getElementById('childrenList');
+            
+            // Limpar listas
+            adultList.innerHTML = '';
+            childrenList.innerHTML = '';
+            
+            // Carregar adultos
+            guests.adults.forEach((guest, index) => {
+                const li = document.createElement('li');
+                li.className = 'guest-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'guest-checkbox';
+                checkbox.id = 'adult-' + index;
+                
+                // Verificar se já está salvo
+                const saved = localStorage.getItem('adult-' + index);
+                if (saved === 'true') {
+                    checkbox.checked = true;
+                }
+                
+                checkbox.addEventListener('change', function() {
+                    localStorage.setItem('adult-' + index, this.checked);
+                    updateStats();
+                });
+                
+                const name = document.createElement('span');
+                name.className = 'guest-name';
+                name.textContent = guest;
+                
+                const status = document.createElement('span');
+                status.className = 'guest-status';
+                status.textContent = checkbox.checked ? 'Confirmado' : 'Pendente';
+                if (checkbox.checked) {
+                    status.classList.add('confirmed');
+                }
+                
+                li.appendChild(checkbox);
+                li.appendChild(name);
+                li.appendChild(status);
+                adultList.appendChild(li);
+            });
+            
+            // Carregar crianças
+            guests.children.forEach((child, index) => {
+                const li = document.createElement('li');
+                li.className = 'guest-item';
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.className = 'guest-checkbox';
+                checkbox.id = 'child-' + index;
+                
+                // Verificar se já está salvo
+                const saved = localStorage.getItem('child-' + index);
+                if (saved === 'true') {
+                    checkbox.checked = true;
+                }
+                
+                checkbox.addEventListener('change', function() {
+                    localStorage.setItem('child-' + index, this.checked);
+                    updateStats();
+                });
+                
+                const name = document.createElement('span');
+                name.className = 'guest-name';
+                name.textContent = child;
+                
+                const status = document.createElement('span');
+                status.className = 'guest-status';
+                status.textContent = checkbox.checked ? 'Confirmado' : 'Pendente';
+                if (checkbox.checked) {
+                    status.classList.add('confirmed');
+                }
+                
+                li.appendChild(checkbox);
+                li.appendChild(name);
+                li.appendChild(status);
+                childrenList.appendChild(li);
+            });
+            
+            updateStats();
+        }
+
+        // Atualizar estatísticas
+        function updateStats() {
+            let confirmed = 0;
+            const total = guests.adults.length + guests.children.length;
+            
+            // Contar adultos confirmados
+            for (let i = 0; i < guests.adults.length; i++) {
+                if (localStorage.getItem('adult-' + i) === 'true') {
+                    confirmed++;
+                    // Atualizar status visual
+                    const status = document.querySelector('#adult-' + i).parentNode.querySelector('.guest-status');
+                    if (status) {
+                        status.textContent = 'Confirmado';
+                        status.classList.add('confirmed');
+                    }
+                }
+            }
+            
+            // Contar crianças confirmadas
+            for (let i = 0; i < guests.children.length; i++) {
+                if (localStorage.getItem('child-' + i) === 'true') {
+                    confirmed++;
+                    // Atualizar status visual
+                    const status = document.querySelector('#child-' + i).parentNode.querySelector('.guest-status');
+                    if (status) {
+                        status.textContent = 'Confirmado';
+                        status.classList.add('confirmed');
+                    }
+                }
+            }
+            
+            const pending = total - confirmed;
+            
+            document.getElementById('confirmedGuests').textContent = confirmed;
+            document.getElementById('pendingGuests').textContent = pending;
+            document.getElementById('confirmedCount').textContent = confirmed;
+        }
+
+        // Buscar convidados
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const search = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.guest-item');
+            
+            items.forEach(item => {
+                const name = item.querySelector('.guest-name').textContent.toLowerCase();
+                if (name.includes(search)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        // Marcar todos
+        document.getElementById('selectAll').addEventListener('click', function() {
+            // Marcar todos os adultos
+            for (let i = 0; i < guests.adults.length; i++) {
+                localStorage.setItem('adult-' + i, 'true');
+            }
+            // Marcar todas as crianças
+            for (let i = 0; i < guests.children.length; i++) {
+                localStorage.setItem('child-' + i, 'true');
+            }
+            // Recarregar a lista
+            loadGuestLists();
+        });
+
+        // Desmarcar todos
+        document.getElementById('clearAll').addEventListener('click', function() {
+            // Desmarcar todos os adultos
+            for (let i = 0; i < guests.adults.length; i++) {
+                localStorage.setItem('adult-' + i, 'false');
+            }
+            // Desmarcar todas as crianças
+            for (let i = 0; i < guests.children.length; i++) {
+                localStorage.setItem('child-' + i, 'false');
+            }
+            // Recarregar a lista
+            loadGuestLists();
+        });
+
+        // Exportar lista
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            let confirmedAdults = [];
+            let confirmedChildren = [];
+            
+            // Coletar adultos confirmados
+            for (let i = 0; i < guests.adults.length; i++) {
+                if (localStorage.getItem('adult-' + i) === 'true') {
+                    confirmedAdults.push(guests.adults[i]);
+                }
+            }
+            
+            // Coletar crianças confirmadas
+            for (let i = 0; i < guests.children.length; i++) {
+                if (localStorage.getItem('child-' + i) === 'true') {
+                    confirmedChildren.push(guests.children[i]);
+                }
+            }
+            
+            let text = 'CONVIDADOS CONFIRMADOS - Chá da Marjorie\n\n';
+            text += 'ADULTOS (' + confirmedAdults.length + '):\n';
+            confirmedAdults.forEach(adult => {
+                text += '✓ ' + adult + '\n';
+            });
+            
+            text += '\nCRIANÇAS (' + confirmedChildren.length + '):\n';
+            confirmedChildren.forEach(child => {
+                text += '✓ ' + child + '\n';
+            });
+            
+            text += '\nTOTAL: ' + (confirmedAdults.length + confirmedChildren.length) + ' convidados';
+            
+            // Criar e baixar arquivo
+            const blob = new Blob([text], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'convidados_confirmados.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        });
+
+        // Inicializar quando a página carregar
+        window.addEventListener('load', loadGuestLists);
+    </script>
 </body>
 </html>
