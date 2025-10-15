@@ -55,7 +55,10 @@ function renderGuestList(guestArray, listElement) {
         const checkbox = document.createElement('input');
         checkbox.type = 'checkbox';
         checkbox.className = 'guest-checkbox';
-        checkbox.id = `guest-${guest.replace(/\s+/g, '-')}`;
+        
+        // Criar ID seguro para o localStorage
+        const guestId = guest.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '');
+        checkbox.id = `guest-${guestId}`;
         
         // Verificar se já estava marcado (do localStorage)
         const isChecked = localStorage.getItem(checkbox.id) === 'true';
@@ -72,7 +75,10 @@ function renderGuestList(guestArray, listElement) {
         
         const statusSpan = document.createElement('span');
         statusSpan.className = 'guest-status';
-        statusSpan.textContent = 'Pendente';
+        statusSpan.textContent = isChecked ? 'Confirmado' : 'Pendente';
+        if (isChecked) {
+            statusSpan.classList.add('confirmed');
+        }
         
         listItem.appendChild(checkbox);
         listItem.appendChild(nameLabel);
@@ -89,19 +95,26 @@ function updateStats() {
     
     // Contar convidados confirmados
     guests.adults.concat(guests.children).forEach(guest => {
-        const checkboxId = `guest-${guest.replace(/\s+/g, '-')}`;
-        if (localStorage.getItem(checkboxId) === 'true') {
+        const guestId = `guest-${guest.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}`;
+        if (localStorage.getItem(guestId) === 'true') {
             confirmedGuests++;
             
             // Atualizar status para confirmado
-            const statusElement = document.querySelector(`#${checkboxId}`).parentNode.querySelector('.guest-status');
-            statusElement.textContent = 'Confirmado';
-            statusElement.classList.add('confirmed');
+            const checkbox = document.getElementById(guestId);
+            if (checkbox) {
+                const statusElement = checkbox.parentNode.querySelector('.guest-status');
+                statusElement.textContent = 'Confirmado';
+                statusElement.classList.add('confirmed');
+            }
         } else {
             // Atualizar status para pendente
-            const statusElement = document.querySelector(`#${checkboxId}`).parentNode.querySelector('.guest-status');
-            statusElement.textContent = 'Pendente';
-            statusElement.classList.remove('confirmed');
+            const guestId = `guest-${guest.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}`;
+            const checkbox = document.getElementById(guestId);
+            if (checkbox) {
+                const statusElement = checkbox.parentNode.querySelector('.guest-status');
+                statusElement.textContent = 'Pendente';
+                statusElement.classList.remove('confirmed');
+            }
         }
     });
     
@@ -130,20 +143,24 @@ searchInput.addEventListener('input', function() {
 
 // Marcar todos os convidados
 selectAllBtn.addEventListener('click', function() {
-    document.querySelectorAll('.guest-checkbox').forEach(checkbox => {
-        checkbox.checked = true;
-        localStorage.setItem(checkbox.id, true);
+    guests.adults.concat(guests.children).forEach(guest => {
+        const guestId = `guest-${guest.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}`;
+        localStorage.setItem(guestId, true);
     });
-    updateStats();
+    
+    // Recarregar a lista para refletir as mudanças
+    initializeGuestLists();
 });
 
 // Desmarcar todos os convidados
 clearAllBtn.addEventListener('click', function() {
-    document.querySelectorAll('.guest-checkbox').forEach(checkbox => {
-        checkbox.checked = false;
-        localStorage.setItem(checkbox.id, false);
+    guests.adults.concat(guests.children).forEach(guest => {
+        const guestId = `guest-${guest.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}`;
+        localStorage.setItem(guestId, false);
     });
-    updateStats();
+    
+    // Recarregar a lista para refletir as mudanças
+    initializeGuestLists();
 });
 
 // Exportar lista
@@ -151,23 +168,32 @@ exportBtn.addEventListener('click', function() {
     let confirmedList = "CONVIDADOS CONFIRMADOS - Chá da Marjorie\n\n";
     confirmedList += "ADULTOS:\n";
     
+    let adultCount = 0;
     guests.adults.forEach(guest => {
-        const checkboxId = `guest-${guest.replace(/\s+/g, '-')}`;
-        if (localStorage.getItem(checkboxId) === 'true') {
+        const guestId = `guest-${guest.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}`;
+        if (localStorage.getItem(guestId) === 'true') {
             confirmedList += `✓ ${guest}\n`;
+            adultCount++;
         }
     });
     
-    confirmedList += "\nCRIANÇAS:\n";
+    confirmedList += `\nTotal adultos: ${adultCount}\n\n`;
+    confirmedList += "CRIANÇAS:\n";
+    
+    let childrenCount = 0;
     guests.children.forEach(child => {
-        const checkboxId = `guest-${child.replace(/\s+/g, '-')}`;
-        if (localStorage.getItem(checkboxId) === 'true') {
+        const guestId = `guest-${child.replace(/\s+/g, '-').replace(/[^a-zA-Z0-9-]/g, '')}`;
+        if (localStorage.getItem(guestId) === 'true') {
             confirmedList += `✓ ${child}\n`;
+            childrenCount++;
         }
     });
+    
+    confirmedList += `\nTotal crianças: ${childrenCount}\n`;
+    confirmedList += `\nTOTAL GERAL: ${adultCount + childrenCount} convidados`;
     
     // Criar arquivo para download
-    const blob = new Blob([confirmedList], { type: 'text/plain' });
+    const blob = new Blob([confirmedList], { type: 'text/plain;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
@@ -179,4 +205,11 @@ exportBtn.addEventListener('click', function() {
 });
 
 // Inicializar a aplicação quando o DOM estiver carregado
-document.addEventListener('DOMContentLoaded', initializeGuestLists);
+document.addEventListener('DOMContentLoaded', function() {
+    initializeGuestLists();
+});
+
+// Também inicializar quando a janela carregar (backup)
+window.addEventListener('load', function() {
+    initializeGuestLists();
+});
